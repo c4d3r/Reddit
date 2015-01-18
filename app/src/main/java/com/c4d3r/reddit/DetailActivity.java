@@ -4,21 +4,21 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 /**
- * Created by Maxim on 17/01/2015.
+ * Created by Maxim on 18/01/2015.
  */
-public class MainActivity extends ActionBarActivity
+public class DetailActivity extends ActionBarActivity
 {
-    public static final String TAG = MainActivity.class.getSimpleName();
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.detail_activity);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_topics, new TopicFragment())
+                    .add(R.id.container, new DetailFragment())
                     .commit();
         }
-
     }
 }
-

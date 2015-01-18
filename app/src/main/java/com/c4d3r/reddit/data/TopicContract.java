@@ -1,4 +1,4 @@
-package com.c4d3r.reddit.persistence;
+package com.c4d3r.reddit.data;
 
 import android.content.ContentUris;
 import android.net.Uri;

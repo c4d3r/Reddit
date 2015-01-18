@@ -2,6 +2,7 @@ package com.c4d3r.reddit;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.Bundle;
@@ -19,11 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import com.c4d3r.reddit.adapter.TopicAdapter;
-import com.c4d3r.reddit.persistence.TopicContract.TopicEntry;
+import com.c4d3r.reddit.data.TopicContract.TopicEntry;
 import com.c4d3r.reddit.rest.RedditClient;
 import com.c4d3r.reddit.rest.model.Topic;
 
@@ -75,6 +74,7 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getActivity();
         //menu events
         setHasOptionsMenu(true);
     }
@@ -95,6 +95,12 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
+    public void onStart() {
+        fetchContent();
+        super.onStart();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mTopicAdapter = new TopicAdapter(getActivity(), null, 0);
@@ -107,6 +113,11 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO: on item click
+                //doorsturen naar nieuwe activity
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("url", mTopicAdapter.getCursor().getString(COL_TOPIC_THUMBNAIL));
+                startActivity(intent);
+
             }
         });
         return rootView;
@@ -146,7 +157,7 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
             public void success(final List<Topic> topics, Response response) {
 
                 // In de databank steken
-                Vector<ContentValues> cVVector = new Vector<ContentValues>(topics.size());
+                Vector<ContentValues> cVVector = new Vector<>(topics.size());
 
                 for(int i = 0; i < topics.size(); i++)
                 {
@@ -163,34 +174,15 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
                 }
 
                 if(cVVector.size() > 0) {
+                    //verwijder oude entries eerst
+                    mContext.getContentResolver().delete(TopicEntry.CONTENT_URI, null, null);
+
+                    // voeg nieuwe toe
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
                     int rowsInserted = mContext.getContentResolver().bulkInsert(TopicEntry.CONTENT_URI, cvArray);
                     Log.v(TAG, "Inserted " + rowsInserted + " rows of topic data");
-
-                    if(DEBUG) {
-                        Cursor topicCursor = mContext.getContentResolver().query(
-                                TopicEntry.CONTENT_URI,
-                                null,
-                                null,
-                                null,
-                                null
-                        );
-
-                        if(topicCursor.moveToFirst()) {
-                            ContentValues resultValues = new ContentValues();
-                            DatabaseUtils.cursorRowToContentValues(topicCursor, resultValues);
-                            Log.v(TAG, "Query succeeded! **********");
-                            for (String key : resultValues.keySet()) {
-                                Log.v(TAG, key + ": " + resultValues.getAsString(key));
-                            }
-                        } else {
-                            Log.v(TAG, "Query failed! :( **********");
-                        }
-                    }
                 }
-                //ListView lvTopics = (ListView) findViewById(R.id.lvThreads);
-                //lvTopics.setAdapter(new TopicAdapter(getLayoutInflater(), getApplicationContext(), topics));
             }
 
             @Override

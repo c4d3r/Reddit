@@ -22,9 +22,13 @@
 
         </activity>
 
+        <activity
+            android:name=".DetailActivity"
+            android:label="Detail" />
+
         <provider
             android:authorities="com.c4d3r.reddit"
-            android:name=".persistence.TopicProvider" />
+            android:name=".data.TopicProvider" />
     </application>
 
 </manifest>

@@ -1,11 +1,11 @@
-package com.c4d3r.reddit.persistence;
+package com.c4d3r.reddit.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.c4d3r.reddit.persistence.TopicContract.TopicEntry;
+import com.c4d3r.reddit.data.TopicContract.TopicEntry;
 
 /**
  * Created by Maxim on 17/01/2015.

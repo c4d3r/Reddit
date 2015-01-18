@@ -1,4 +1,4 @@
-package com.c4d3r.reddit.persistence;
+package com.c4d3r.reddit.data;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -155,7 +155,7 @@ public class TopicProvider extends ContentProvider
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        int rowsUpdated = 0;
+        int rowsUpdated;
 
         switch (match) {
             case TOPICS: {
@@ -166,7 +166,7 @@ public class TopicProvider extends ContentProvider
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        if(0 != rowsUpdated) {
+        if(rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
