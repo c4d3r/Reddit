@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
 
     <TextView
-        android:layout_width="30%"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
         android:id="@+id/txtScore"/>
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:layout_width="30"
-        android:layout_height="70dp"
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="80dp"
         android:id="@+id/imgThumbnail"
-        android:background="#000"/>
+        android:scaleType="centerCrop"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +33,4 @@
             android:layout_height="wrap_content"
             android:id="@+id/txtAuthor"/>
     </LinearLayout>
-
-
-
 </LinearLayout>

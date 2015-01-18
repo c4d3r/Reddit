@@ -21,6 +21,10 @@
             </intent-filter>
 
         </activity>
+
+        <provider
+            android:authorities="com.c4d3r.reddit"
+            android:name=".persistence.TopicProvider" />
     </application>
 
 </manifest>

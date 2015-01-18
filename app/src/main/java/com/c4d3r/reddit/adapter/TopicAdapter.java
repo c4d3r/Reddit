@@ -1,5 +1,6 @@
 package com.c4d3r.reddit.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,11 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.c4d3r.reddit.AppController;
 import com.c4d3r.reddit.R;
-import com.c4d3r.reddit.model.Topic;
+import com.c4d3r.reddit.rest.model.Topic;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -22,11 +21,12 @@ public class TopicAdapter extends BaseAdapter
 {
     private LayoutInflater _layoutInflater;
     private List<Topic> _topics;
-    private ImageLoader _imageLoader = AppController.getInstance().getImageLoader();
+    private Context _context;
 
-    public TopicAdapter(LayoutInflater layoutInflater, List<Topic> topics)
+    public TopicAdapter(LayoutInflater layoutInflater, Context context, List<Topic> topics)
     {
         _layoutInflater = layoutInflater;
+        _context = context;
         _topics = topics;
     }
 
@@ -36,17 +36,18 @@ public class TopicAdapter extends BaseAdapter
         if(view == null)
             view = _layoutInflater.inflate(R.layout.item_topic, null);
 
-        TextView title  = (TextView)view.findViewById(R.id.txtTitle);
-        TextView author = (TextView)view.findViewById(R.id.txtAuthor);
-        TextView score  = (TextView)view.findViewById(R.id.txtScore);
-
-        NetworkImageView thumbnail = (NetworkImageView)view.findViewById(R.id.imgThumbnail);
-        thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        TextView title      = (TextView)view.findViewById(R.id.txtTitle);
+        TextView author     = (TextView)view.findViewById(R.id.txtAuthor);
+        ImageView imgThumb  = (ImageView)view.findViewById(R.id.imgThumbnail);
+        TextView score      = (TextView)view.findViewById(R.id.txtScore);
 
         Topic topic = _topics.get(position);
+
         title.setText(topic.getTitle());
         author.setText(topic.getAuthor());
-        score.setText(topic.getScore());
+        score.setText(Integer.toString(topic.getScore()));
+
+        Picasso.with(_context).load(topic.getThumbnailUrl()).into(imgThumb);
 
         return view;
     }

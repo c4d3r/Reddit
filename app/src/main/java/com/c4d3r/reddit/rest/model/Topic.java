@@ -1,24 +1,37 @@
-package com.c4d3r.reddit.model;
+package com.c4d3r.reddit.rest.model;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by Maxim on 17/01/2015.
  */
-public class Topic
+//TODO: Move to parcelable
+public class Topic implements Serializable
 {
+    @SerializedName("domain")
     private String domain;
 
+    @SerializedName("selftext_html")
     private String htmlText;
 
+    @SerializedName("author")
     private String author;
 
+    @SerializedName("stickied")
     private boolean stickied;
 
+    @SerializedName("title")
     private String title;
 
+    @SerializedName("created_utc")
     private int createdOn;
 
+    @SerializedName("score")
     private int score;
 
+    @SerializedName("thumbnail")
     private String thumbnailUrl;
 
     public Topic(String title, String author, int score)
