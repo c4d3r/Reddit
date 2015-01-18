@@ -1,36 +1,14 @@
 package com.c4d3r.reddit;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.widget.ListView;
 
-import com.c4d3r.reddit.adapter.TopicAdapter;
-import com.c4d3r.reddit.persistence.TopicContract;
-import com.c4d3r.reddit.rest.RedditClient;
-import com.c4d3r.reddit.rest.TopicDeserializer;
 import com.c4d3r.reddit.rest.model.Topic;
-import com.c4d3r.reddit.rest.service.TopicService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
 
 import com.c4d3r.reddit.persistence.TopicContract.TopicEntry;
 

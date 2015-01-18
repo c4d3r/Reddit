@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,7 +42,7 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
     public static final String TAG = TopicFragment.class.getSimpleName();
     private boolean DEBUG = true;
 
-    private SimpleCursorAdapter mTopicAdapter;
+    private TopicAdapter mTopicAdapter;
 
     private static final int TOPIC_LOADER = 0;
     private String mLocation;
@@ -61,12 +60,13 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
     };
 
     //bind een volgnummer aan de kolommen
-    public static final int COL_TOPIC_TITLE = 0;
-    public static final int COL_TOPIC_DOMAIN = 1;
-    public static final int COL_TOPIC_AUTHOR = 2;
-    public static final int COL_TOPIC_SCORE = 3;
-    public static final int COL_TOPIC_TEXT = 4;
-    public static final int COL_TOPIC_THUMBNAIL = 5;
+    public static final int COL_TOPIC_ID = 0;
+    public static final int COL_TOPIC_TITLE = 1;
+    public static final int COL_TOPIC_DOMAIN = 2;
+    public static final int COL_TOPIC_AUTHOR = 3;
+    public static final int COL_TOPIC_SCORE = 4;
+    public static final int COL_TOPIC_TEXT = 5;
+    public static final int COL_TOPIC_THUMBNAIL = 6;
 
     public TopicFragment() {
 
@@ -96,45 +96,8 @@ public class TopicFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mTopicAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                R.layout.item_topic,
-                null,
-                //kolommen voor textviews te vullen
-                new String[] {
-                    TopicEntry.COLUMN_AUTHOR,
-                    TopicEntry.COLUMN_TITLE,
-                    TopicEntry.COLUMN_SCORE,
-                    TopicEntry.COLUMN_THUMBNAIL,
-                },
-                //textviews id die we willen vullen
-                new int[] {
-                    R.id.txtAuthor,
-                    R.id.txtTitle,
-                    R.id.txtScore,
-                    R.id.imgThumbnail,
-                },
-                0
-        );
 
-        mTopicAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-                switch (columnIndex)
-                {
-                    case COL_TOPIC_AUTHOR:
-                    case COL_TOPIC_TITLE: {
-                        ((TextView) view).setText(cursor.getString(columnIndex));
-                        return true;
-                    }
-                    case COL_TOPIC_SCORE: {
-                        //((TextView) view).setText(cursor.getInt(columnIndex));
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        mTopicAdapter = new TopicAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 

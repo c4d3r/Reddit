@@ -1,68 +1,67 @@
 package com.c4d3r.reddit.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.c4d3r.reddit.R;
-import com.c4d3r.reddit.rest.model.Topic;
+import com.c4d3r.reddit.TopicFragment;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 /**
- * Created by Maxim on 17/01/2015.
+ * Created by Maxim on 18/01/2015.
  */
-public class TopicAdapter extends BaseAdapter
+public class TopicAdapter extends CursorAdapter
 {
-    private LayoutInflater _layoutInflater;
-    private List<Topic> _topics;
-    private Context _context;
+    public static class ViewHolder {
+        public final TextView titleView;
+        public final TextView authorView;
+        public final TextView scoreView;
+        public final ImageView thumbnailView;
 
-    public TopicAdapter(LayoutInflater layoutInflater, Context context, List<Topic> topics)
+        public ViewHolder(View view) {
+            titleView = (TextView)view.findViewById(R.id.txtTitle);
+            authorView = (TextView)view.findViewById(R.id.txtAuthor);
+            scoreView = (TextView)view.findViewById(R.id.txtScore);
+            thumbnailView = (ImageView)view.findViewById(R.id.imgThumbnail);
+        }
+    }
+
+    public TopicAdapter(Context context, Cursor c, int flags)
     {
-        _layoutInflater = layoutInflater;
-        _context = context;
-        _topics = topics;
+        super(context, c, flags);
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent)
-    {
-        if(view == null)
-            view = _layoutInflater.inflate(R.layout.item_topic, null);
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        int layoutId = R.layout.item_topic;
 
-        TextView title      = (TextView)view.findViewById(R.id.txtTitle);
-        TextView author     = (TextView)view.findViewById(R.id.txtAuthor);
-        ImageView imgThumb  = (ImageView)view.findViewById(R.id.imgThumbnail);
-        TextView score      = (TextView)view.findViewById(R.id.txtScore);
-
-        Topic topic = _topics.get(position);
-
-        title.setText(topic.getTitle());
-        author.setText(topic.getAuthor());
-        score.setText(Integer.toString(topic.getScore()));
-
-        Picasso.with(_context).load(topic.getThumbnailUrl()).into(imgThumb);
+        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
 
         return view;
     }
 
-    public int getCount() {
-        return _topics.size();
-    }
-
     @Override
-    public Object getItem(int position) {
-        return _topics.get(position);
-    }
+    public void bindView(View view, Context context, Cursor cursor) {
+        ViewHolder viewHolder = (ViewHolder)view.getTag();
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+        String title = cursor.getString(TopicFragment.COL_TOPIC_TITLE);
+        viewHolder.titleView.setText(title);
+
+        String author = cursor.getString(TopicFragment.COL_TOPIC_AUTHOR);
+        viewHolder.authorView.setText(author);
+
+        int score = cursor.getInt(TopicFragment.COL_TOPIC_SCORE);
+        viewHolder.scoreView.setText(Integer.toString(score));
+
+        String thumbnail = cursor.getString(TopicFragment.COL_TOPIC_THUMBNAIL);
+        Picasso.with(context).load(thumbnail).into(viewHolder.thumbnailView);
     }
 }
